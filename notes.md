@@ -186,4 +186,26 @@ validates :body, uniqueness: {message: "must be unique!"}
 ```ruby
 validates :view_count, numericality: true
 validates :view_count, numericality: {greater_than_or_equal_to: 0}
+validates :email,
+          format: { with: /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i }
 ```
+Custom validators
+```ruby
+# This is using custom validation method. We must make sure that
+# 'no monkey' is a method available for our class. The method can
+# be public or private. It's more likely we will have it as a private
+# method because we don't need to use it outside of the class
+validate :no_monkey
+
+private
+def no_monkey
+  if title && title.downcase.include? ("monkey")
+    errors.add(:title, "No monkey!")
+  end
+end
+```
+Bang in Rails
+```
+q.save!
+```
+- Gives exception rather than true and false
