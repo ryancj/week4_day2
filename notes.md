@@ -91,4 +91,62 @@ Question.where(["created_at > ?",5.days.ago])
 5.minutes.ago
 2.years.ago
 Question.where(["created_at > ? OR view_count = 0",5.minutes.ago])
+
+Question.where(["title ILIKE ? OR body ILIKE ?", "%my%", "%my%"])
+%my
+my%
+%my%
 ```
+```
+100.times {Question.create(title: Faker::Company.bs, body: Faker::Lorem.paragraph, view_count: rand(10))}
+Question.limit(10)
+Question.limit(10).offset(10)
+```
+- Update
+```
+q = Question.find 10
+q.body = "new question body"
+q.save
+q.persisted?
+Updates because id already exists
+q.update({body: "some new question body"})
+```
+- Delete
+```
+.destroy
+.delete skips call backs, and may nullify/delete associations
+```
+- Create index
+
+```
+bin/rails g migration add_indicies_to_questions
+```
+```ruby
+class AddIndiciesToQuestions < ActiveRecord::Migration
+  def change
+    # this will ad an index (not unique) to questions table on the title
+    # column
+
+    add_index :questions, :title
+    add_index :questions, :body
+
+    # This creates a unique index
+    # add_index :questions, :body, unique: true
+
+    # To create a composite index you can do
+    # add_index :questions, [:title, :body]
+  end
+end
+```
+- Binary Tree?
+- Seeds
+```ruby
+seeds.rb
+
+100.times do |variable|
+  Question.create title: Faker::Company.bs,
+                  body:  Faker::Lorem.paragraph,
+                  view_count:rand(100)
+end
+```
+When running up for the first time so DB is not empty
