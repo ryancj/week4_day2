@@ -150,3 +150,40 @@ seeds.rb
 end
 ```
 When running up for the first time so DB is not empty
+
+---
+##Validation
+Avoid doing validations in controllers
+- Instead do it at the model layer
+```ruby
+class Question < ActiveRecord::Base
+  # this will fail validations (so it won't create or save) if the title is
+  # not provided
+  validates :title, presence: true
+```
+```
+reload!
+true
+q = Question.new
+q.save
+q.valid?
+q.errors
+q.errors.full_messages
+```
+You can use multiple validations
+```ruby
+validates :title, presence: true, uniqueness: true { case_sensitive: false }
+
+validates :body, uniqueness: {message: "must be unique!"}
+```
+```ruby
+# this validates that the combination of the title and body is
+# unique. Which means the title doesn't have to be unique by itself
+# and the body doesn't have to be unique by itself. However, the
+# combination of the two fields must be unique
+# validates :title, uniqueness: {scope: :body}
+```
+```ruby
+validates :view_count, numericality: true
+validates :view_count, numericality: {greater_than_or_equal_to: 0}
+```
