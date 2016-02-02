@@ -3,5 +3,11 @@
 ##Review of Day 1 Rails
 
 ####Controller
-- delegates model and view
-- there will be multiple controllers
+Delegates model and view
+- There will be multiple controllers
+
+####ORM
+Object Relational Mapping
+Active Record
+- Create ruby object, accessors, and methods to access queries
+Data Mapper is an alternative
