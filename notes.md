@@ -189,7 +189,7 @@ validates :view_count, numericality: {greater_than_or_equal_to: 0}
 validates :email,
           format: { with: /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i }
 ```
-Custom validators
+- Custom validators
 ```ruby
 # This is using custom validation method. We must make sure that
 # 'no monkey' is a method available for our class. The method can
@@ -204,8 +204,38 @@ def no_monkey
   end
 end
 ```
-Bang in Rails
+- Bang in Rails
 ```
 q.save!
 ```
-- Gives exception rather than true and false
+Gives exception rather than true and false
+
+####Callback
+```ruby
+after_initialize :set_defaults
+before_save :capitalize_title
+
+private
+
+def set_defaults
+  self.view_count ||= 0
+end
+
+def capitalize_title
+  self.title.capitalize!
+end
+```
+
+####Scopes
+```ruby
+# scope :recent, lambda { order("created_at DESC").limit(5) }
+def self.recent(number = 5)
+  order("created_at DESC").limit(number)
+end
+
+def self.popular
+  where("view_count > 10")
+end
+```
+Use lambda when it's short and simple, function
+code is more complex
